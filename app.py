@@ -883,15 +883,6 @@ if selection == "Overview":
         - **Data Processing & Analysis:** Dive into clustering, modeling, and interpretation.
         """)
 
-    with st.expander("👥 View Team Members"):
-        st.markdown("""
-        - **Wai Yan Moe** (24065716)
-        - **Yew Yen Bin** (24144198)
-        - **Phan Duc Duy Anh** (24101602)
-        - **Ameiyrul Hassan Bin Ashruff Hassan** (18091223)
-        - **Matthew Lo Hon Mun** (25083247)
-        """)
-
 elif selection == "Data Exploration":
     show_data_exploration(df_cleaned)
 
