@@ -12,3 +12,5 @@ shap
 streamlit-folium
 folium
 openpyxl
+statsmodels
+numba
