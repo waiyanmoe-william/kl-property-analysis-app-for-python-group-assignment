@@ -1,20 +1,14 @@
-# Core Streamlit and Data Handling
 streamlit
 pandas
 numpy
-openpyxl
-
-# Plotting and Visualization
 matplotlib
 seaborn
-folium
-streamlit-folium
-
-# Geospatial Analysis
+plotly
 geopandas
-mapclassify
-
-# Machine Learning and Interpretation
+shapely
 scikit-learn
-shap
 lightgbm
+shap
+streamlit-folium
+folium
+openpyxl
