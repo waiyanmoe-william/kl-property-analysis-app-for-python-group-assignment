@@ -1,0 +1,4 @@
+Model,Test R2 Score,Test RMSE (log)
+Random Forest,0.801761,0.216648
+LightGBM,0.795823,0.219869
+Extra Trees,0.795815,0.219873
