@@ -400,29 +400,18 @@ df.drop(columns=cols_to_drop, inplace=True, errors='ignore')
 
 @st.cache_data
 def load_model_and_shap_results():
-    """
-    Loads all pre-computed model and SHAP analysis files.
-    This is extremely fast as it only performs file I/O.
-    """
     try:
         results_df = pd.read_csv('model_performance_results.csv')
-        
         with open('best_model.pkl', 'rb') as f:
             best_model = pickle.load(f)
             
-        X_test_df = pd.read_csv('shap_test_data.csv')
+        X_test_df = pd.read_csv('shap_test_data.csv', header=0)
         X_test_scaled = X_test_df.values
-        feature_names = X_test_df.columns
+        feature_names = list(X_test_df.columns)
         
         shap_values_array = np.load('shap_values.npy')
         
-        shap_explanation = shap.Explanation(
-            values=shap_values_array,
-            data=X_test_scaled,
-            feature_names=feature_names
-        )
-        
-        return results_df, best_model, X_test_scaled, feature_names, shap_explanation
+        return results_df, best_model, X_test_scaled, feature_names, shap_values_array
 
     except FileNotFoundError as e:
         missing_file = str(e).split("'")[1] if "'" in str(e) else "unknown file"
@@ -575,7 +564,7 @@ def show_data_analysis(df):
             st.warning("Could not load cluster analysis results.")
 
     # Load all model/SHAP results once for the next two tabs
-    model_results, best_model, X_test_scaled, feature_names, shap_explanation = load_model_and_shap_results()
+    model_results, best_model, X_test_scaled, feature_names, shap_values_array = load_model_and_shap_results()
 
     with tab2:
         st.subheader("Predictive Model Performance")
@@ -623,13 +612,20 @@ def show_data_analysis(df):
         The SHAP values below were pre-computed for fast loading.
         """)
         
-        if shap_explanation is not None:
+        if shap_values_array is not None:
             st.markdown("#### SHAP Feature Importance")
             st.markdown("This chart shows the average impact of each feature on the model's output magnitude.")
             
             # Create SHAP summary plot
             fig_summary, ax_summary = plt.subplots(figsize=(8, 4))
-            shap.summary_plot(shap_explanation, plot_type="bar", show=False, color=BLUE1)
+            shap.summary_plot(
+                shap_values_array,
+                features=X_test_scaled,
+                feature_names=feature_names,
+                plot_type="bar",
+                show=False,
+                color=BLUE1
+            )
             ax_summary.set_xlabel("Mean |SHAP Value|")
             ax_summary.set_title("Feature Importance (SHAP)")
             plt.tight_layout()
@@ -645,14 +641,14 @@ def show_data_analysis(df):
                 try:
                     fig_dependence, ax_dependence = plt.subplots(figsize=(10, 6))
                     shap.dependence_plot(
-                        selected_feature_shap, 
-                        shap_explanation.values, 
-                        X_test_scaled, 
-                        feature_names=feature_names, 
-                        interaction_index="auto", 
-                        ax=ax_dependence, 
-                        show=False
-                    )
+                    selected_feature_shap, 
+                    shap_values_array,
+                    X_test_scaled, 
+                    feature_names=feature_names, 
+                    interaction_index="auto", 
+                    ax=ax_dependence, 
+                    show=False
+                )
                     ax_dependence.set_title(f"SHAP Dependence Plot: {selected_feature_shap}")
                     plt.tight_layout()
                     st.pyplot(fig_dependence)
