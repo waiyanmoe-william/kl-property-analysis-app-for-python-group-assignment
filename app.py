@@ -867,20 +867,11 @@ if selection == "Overview":
     st.subheader("📋 Data Source & Preview")
     st.info("💡 **Data Source:** [JPPH Valuation and Property Services Department](https://napic2.jpph.gov.my/ms/data-transaksi?category=36&id=241)")
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("🎯 Business Goal")
-        st.markdown("""
+    st.subheader("🎯 Business Goal")
+    st.markdown("""
         - **Understand** the factors influencing property prices in KL.
         - **Create** data-driven sub-market clusters using geospatial analysis.
-        - **Build** a reliable machine learning model to predict property price per square meter.
-        """)
-    with col2:
-        st.subheader("🛠️ How to Use This App")
-        st.markdown("""
-        - **Data Exploration:** Get a first look at the dataset.
-        - **Data Cleaning:** Understand the data preparation steps.
-        - **Data Processing & Analysis:** Dive into clustering, modeling, and interpretation.
+        - **Build** a reliable regression (machine learning) model to predict property price per square meter.
         """)
 
 elif selection == "Data Exploration":
